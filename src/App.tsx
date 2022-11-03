@@ -192,6 +192,7 @@ export const App: React.FC = () => {
                 href="#/"
                 className="button is-link is-outlined is-fullwidth"
                 onClick={() => {
+                  setSelectedCategories([]);
                   setQuery('');
                   setSelectedUserId(0);
                 }}
