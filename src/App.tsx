@@ -232,7 +232,7 @@ export const App: React.FC = () => {
                           <span className="icon">
                             <i
                               data-cy="SortIcon"
-                              className="fas fa-sort-down"
+                              className="fas fa-sort"
                             />
                           </span>
                         </a>
@@ -245,7 +245,7 @@ export const App: React.FC = () => {
 
                         <a href="#/">
                           <span className="icon">
-                            <i data-cy="SortIcon" className="fas fa-sort-up" />
+                            <i data-cy="SortIcon" className="fas fa-sort" />
                           </span>
                         </a>
                       </span>
