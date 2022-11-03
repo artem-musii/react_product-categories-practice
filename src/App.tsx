@@ -6,14 +6,38 @@ import usersFromServer from './api/users';
 import productsFromServer from './api/products';
 import categoriesFromServer from './api/categories';
 
+interface User {
+  id: number;
+  name: string;
+  sex: string;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  categoryId: number;
+}
+
+interface Category {
+  id: number;
+  title: string;
+  icon: string;
+  ownerId: number,
+}
+
+interface ProductWithCategory extends Product {
+  category: Category | null;
+  user: User | null;
+}
+
 const getCategoryById = (id: number) => {
-  return categoriesFromServer.find(category => category.id === id);
+  return categoriesFromServer.find(category => category.id === id) || null;
 };
 
 const getUserByCategoryId = (id: number) => {
   const category = getCategoryById(id);
 
-  return usersFromServer.find(user => user.id === category?.ownerId);
+  return usersFromServer.find(user => user.id === category?.ownerId) || null;
 };
 
 const getProductsWithCategories = () => (
@@ -32,11 +56,12 @@ export const App: React.FC = () => {
     return value.toLowerCase().includes(query.toLowerCase());
   };
 
-  const products = getProductsWithCategories().filter(product => (
-    selectedUserId
-      ? product.user?.id === selectedUserId && doesQueryMatch(product.name)
-      : doesQueryMatch(product.name)
-  ));
+  const products: ProductWithCategory[] = getProductsWithCategories()
+    .filter(product => (
+      selectedUserId
+        ? product.user?.id === selectedUserId && doesQueryMatch(product.name)
+        : doesQueryMatch(product.name)
+    ));
 
   return (
     <div className="section">
