@@ -51,16 +51,28 @@ const getProductsWithCategories = () => (
 export const App: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState(0);
   const [query, setQuery] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   const doesQueryMatch = (value: string) => {
     return value.toLowerCase().includes(query.toLowerCase());
+  };
+
+  const doesIncludeCategory = (category: Category | null) => {
+    if (category) {
+      return selectedCategories.length
+        ? selectedCategories.includes(category)
+        : true;
+    }
+
+    throw Error('smth went wrong');
   };
 
   const products: ProductWithCategory[] = getProductsWithCategories()
     .filter(product => (
       selectedUserId
         ? product.user?.id === selectedUserId && doesQueryMatch(product.name)
-        : doesQueryMatch(product.name)
+        && doesIncludeCategory(product.category)
+        : doesQueryMatch(product.name) && doesIncludeCategory(product.category)
     ));
 
   return (
@@ -132,7 +144,13 @@ export const App: React.FC = () => {
               <a
                 href="#/"
                 data-cy="AllCategories"
-                className="button is-success mr-6 is-info"
+                onClick={() => setSelectedCategories([])}
+                className={classNames(
+                  'button',
+                  'is-success',
+                  'mr-6',
+                  { 'is-outlined': selectedCategories.length !== 0 },
+                )}
               >
                 All
               </a>
@@ -141,8 +159,27 @@ export const App: React.FC = () => {
                 <a
                   key={category.id}
                   data-cy="Category"
-                  className="button mr-2 my-1"
+                  className={classNames(
+                    'button',
+                    'mr-2',
+                    'my-1',
+                    { 'is-info': selectedCategories.includes(category) },
+                  )}
                   href="#/"
+                  onClick={() => {
+                    setSelectedCategories(currentCategories => {
+                      let newCategories = [...currentCategories];
+
+                      if (newCategories.includes(category)) {
+                        newCategories
+                          .splice(newCategories.indexOf(category), 1);
+                      } else {
+                        newCategories = [...newCategories, category];
+                      }
+
+                      return newCategories;
+                    });
+                  }}
                 >
                   {category.title}
                 </a>
