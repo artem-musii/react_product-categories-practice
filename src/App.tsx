@@ -132,7 +132,7 @@ export const App: React.FC = () => {
               <a
                 href="#/"
                 data-cy="AllCategories"
-                className="button is-success mr-6 is-outlined"
+                className="button is-success mr-6 is-info"
               >
                 All
               </a>
@@ -141,7 +141,7 @@ export const App: React.FC = () => {
                 <a
                   key={category.id}
                   data-cy="Category"
-                  className="button mr-2 my-1 is-info"
+                  className="button mr-2 my-1"
                   href="#/"
                 >
                   {category.title}
