@@ -26,11 +26,16 @@ const getProductsWithCategories = () => (
 
 export const App: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState(0);
+  const [query, setQuery] = useState('');
+
+  const doesQueryMatch = (value: string) => {
+    return value.toLowerCase().includes(query.toLowerCase());
+  };
 
   const products = getProductsWithCategories().filter(product => (
     selectedUserId
-      ? product.user?.id === selectedUserId
-      : true
+      ? product.user?.id === selectedUserId && doesQueryMatch(product.name)
+      : doesQueryMatch(product.name)
   ));
 
   return (
@@ -73,7 +78,8 @@ export const App: React.FC = () => {
                   type="text"
                   className="input"
                   placeholder="Search"
-                  value="qwe"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
                 />
 
                 <span className="icon is-left">
@@ -81,12 +87,15 @@ export const App: React.FC = () => {
                 </span>
 
                 <span className="icon is-right">
-                  {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-                  <button
-                    data-cy="ClearButton"
-                    type="button"
-                    className="delete"
-                  />
+                  {query && (
+                    // eslint-disable-next-line jsx-a11y/control-has-associated-label
+                    <button
+                      onClick={() => setQuery('')}
+                      data-cy="ClearButton"
+                      type="button"
+                      className="delete"
+                    />
+                  )}
                 </span>
               </p>
             </div>
